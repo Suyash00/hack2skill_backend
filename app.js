@@ -1,3 +1,5 @@
+// Main entry point: Sets up Express app, connects to MongoDB, applies routes and middleware.
+
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");

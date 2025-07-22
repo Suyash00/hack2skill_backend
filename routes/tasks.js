@@ -1,3 +1,5 @@
+// Express router: Protects all task/subtask routes with auth, handles task endpoints.
+
 const express = require("express");
 const auth = require("../middleware/auth");
 const c = require("../controllers/taskController");

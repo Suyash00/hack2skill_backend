@@ -1,5 +1,8 @@
+// Handles CRUD operations for tasks and subtasks, all scoped to current user.
+
 const mongoose = require("mongoose");
 
+// Lists all non-deleted tasks with their non-deleted subtasks.
 exports.listTasks = (req, res) => {
   const tasks = req.user.tasks
     .filter((t) => !t.deleted)
@@ -10,6 +13,7 @@ exports.listTasks = (req, res) => {
   res.json({ tasks });
 };
 
+// Adds a new task to the user's task list.
 exports.addTask = async (req, res) => {
   const { title, deadline, status } = req.body;
   const task = {
@@ -23,6 +27,7 @@ exports.addTask = async (req, res) => {
   res.status(201).json(req.user.tasks[req.user.tasks.length - 1]);
 };
 
+// Updates task fields (title, deadline, status) for a specific task.
 exports.editTask = async (req, res) => {
   const { taskId } = req.params;
   const { title, deadline, status } = req.body;
@@ -36,6 +41,7 @@ exports.editTask = async (req, res) => {
   res.json(task);
 };
 
+// Soft-deletes a task by setting its isDeleted flag.
 exports.deleteTask = async (req, res) => {
   const { taskId } = req.params;
   const task = req.user.tasks.id(taskId);
@@ -46,6 +52,7 @@ exports.deleteTask = async (req, res) => {
   res.json({ message: "Soft deleted" });
 };
 
+// Returns all non-deleted subtasks of a task.
 exports.getSubtasks = (req, res) => {
   const { taskId } = req.params;
   const task = req.user.tasks.id(taskId);
@@ -55,6 +62,7 @@ exports.getSubtasks = (req, res) => {
   res.json({ subtasks });
 };
 
+// Replaces the subtask list for a task, preserving soft-deleted subtasks.
 exports.updateSubtasks = async (req, res) => {
   const { taskId } = req.params;
   const { subtasks } = req.body;

@@ -1,3 +1,5 @@
+// Auth middleware: Verifies JWT and attaches user to request, blocks if invalid.
+
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 

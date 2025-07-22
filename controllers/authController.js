@@ -1,7 +1,10 @@
+// Handles user registration and authentication logic.
+
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// Registers a new user with name, email, and hashed password.
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
   if (await User.findOne({ email })) {
@@ -12,6 +15,7 @@ exports.register = async (req, res) => {
   res.status(201).json({ message: "Registered" });
 };
 
+// Logs in a user, checks credentials, returns a JWT token.
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
