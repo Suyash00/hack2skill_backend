@@ -4,14 +4,34 @@ const mongoose = require("mongoose");
 const Task = require("../models/TaskSchema");
 
 // Lists all non-deleted tasks with their non-deleted subtasks.
-exports.listTasks = (req, res) => {
-  const tasks = req.user.tasks
-    .filter((t) => !t.deleted)
-    .map((task) => ({
-      ...task.toObject(),
+// exports.listTasks = (req, res) => {
+//   const tasks = req.user.tasks
+//     .filter((t) => !t.deleted)
+//     .map((task) => ({
+//       ...task.toObject(),
+//       subtasks: task.subtasks.filter((s) => !s.deleted),
+//     }));
+//   res.json({ tasks });
+// };
+
+exports.listTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({
+      user: req.user._id,
+      deleted: false,
+    }).lean();
+
+    // Filter deleted subtasks
+    const filteredTasks = tasks.map((task) => ({
+      ...task,
       subtasks: task.subtasks.filter((s) => !s.deleted),
     }));
-  res.json({ tasks });
+
+    res.json({ tasks: filteredTasks });
+  } catch (err) {
+    console.error("Error listing tasks:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // Adds a new task to the user's task list.
