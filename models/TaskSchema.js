@@ -27,17 +27,9 @@ const TaskSchema = new mongoose.Schema(
     },
     deleted: { type: Boolean, default: false },
     subtasks: [SubtaskSchema],
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );
 
-// Defines User schema with embedded Task and Subtask schemas.
-// UserSchema: Represents an application user, embeds tasks.
-const UserSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  tasks: [TaskSchema],
-});
-
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("Task", TaskSchema);

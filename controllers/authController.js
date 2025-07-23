@@ -1,6 +1,6 @@
 // Handles user registration and authentication logic.
 
-const User = require("../models/User");
+const User = require("../models/UserSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 

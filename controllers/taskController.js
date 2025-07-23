@@ -1,6 +1,7 @@
 // Handles CRUD operations for tasks and subtasks, all scoped to current user.
 
 const mongoose = require("mongoose");
+const Task = require("../models/TaskSchema");
 
 // Lists all non-deleted tasks with their non-deleted subtasks.
 exports.listTasks = (req, res) => {
@@ -16,15 +17,17 @@ exports.listTasks = (req, res) => {
 // Adds a new task to the user's task list.
 exports.addTask = async (req, res) => {
   const { title, deadline, status } = req.body;
-  const task = {
+
+  const newTask = new Task({
     title,
     deadline,
     status: status || "pending",
     subtasks: [],
-  };
-  req.user.tasks.push(task);
-  await req.user.save();
-  res.status(201).json(req.user.tasks[req.user.tasks.length - 1]);
+    user: req.user.id, // required since Task is now a separate model
+  });
+
+  await newTask.save();
+  res.status(201).json(newTask);
 };
 
 // Updates task fields (title, deadline, status) for a specific task.
